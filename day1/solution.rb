@@ -28,29 +28,22 @@ QUESTION
 module Day1
   class Solution
     def self.run(input = [])
-      calibration = 0
-      input.reduce { |calibration, i|
-        calibration += i
-      }
+      input.reduce(0) { |f, c| f += c }
     end
+  end
 
-    def self.run_two(input = [])
-      enum = input.to_enum
+  class SolutionPartTwo
+    def self.run(input = [])
       seen = {0 => 1}
-      calibration = 0
+      frequency = 0
 
-      loop do
-        begin
-          calibration += enum.next
-          seen[calibration] ||= 0
-          seen[calibration] += 1
-          return calibration if seen[calibration] > 1
-        rescue StopIteration
-          enum.rewind
-        end
+      while c = input.shift
+        frequency += c
+        seen[frequency] ||= 0
+        seen[frequency] += 1
+        return frequency if seen[frequency] > 1
+        input << c
       end
-
-      raise "I must find an answer!"
     end
   end
 end

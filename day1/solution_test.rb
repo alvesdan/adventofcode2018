@@ -8,28 +8,26 @@ module Day1
     end
 
     def test_solution
+      assert_equal Solution.run([]), 0
       assert_equal Solution.run([+1, -2, +3, +1]), 3
       assert_equal Solution.run([+1, -1]), 0
       assert_equal Solution.run([+1, +1]), 2
-    end
-
-    def test_wrong_input
       refute_equal Solution.run([+1, +1]), 3
     end
 
-    def test_big_input
+    def test_solution_with_input
       assert_equal Solution.run(@test_input), 420
     end
 
-    def test_solution_two
-      assert_equal Solution.run_two([+1, -1]), 0
-      assert_equal Solution.run_two([+3, +3, +4, -2, -4]), 10
-      assert_equal Solution.run_two([-6, +3, +8, +5, -6]), 5
-      assert_equal Solution.run_two([+7, +7, -2, -7, -4]), 14
+    def test_solution_part_two
+      assert_equal SolutionPartTwo.run([+1, -1]), 0
+      assert_equal SolutionPartTwo.run([+3, +3, +4, -2, -4]), 10
+      assert_equal SolutionPartTwo.run([-6, +3, +8, +5, -6]), 5
+      assert_equal SolutionPartTwo.run([+7, +7, -2, -7, -4]), 14
     end
 
-    def test_solution_two_big
-      assert_equal Solution.run_two(@test_input), 227
+    def test_solution_part_two_with_input
+      assert_equal SolutionPartTwo.run(@test_input), 227
     end
 
     private
