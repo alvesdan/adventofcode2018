@@ -34,7 +34,7 @@ module Day1
 
     def read_input
       input = []
-      File.open("input.txt", "r") do |f|
+      File.open("input", "r") do |f|
         f.each_line do |line|
           input << Integer(line)
         end
