@@ -54,52 +54,71 @@ The four square inches marked with X are claimed by both 1 and 2. (Claim 3,
 
 If the Elves all proceed with their own plans, none of them will have enough
 fabric. How many square inches of fabric are within two or more claims?
+
+--- Part Two ---
+Amidst the chaos, you notice that exactly one claim doesn't overlap by even a
+single square inch of fabric with any other claim. If you can somehow draw
+attention to it, maybe the Elves will be able to make Santa's suit after all!
+
+For example, in the claims above, only claim 3 is intact after all claims are
+made.
 QUESTION
 
 module Day3
   class Solution
-    def self.run(input)
-      matrix = Day3::build_matrix(input)
-      matrix.values.reduce(0) do |sum, i|
+    attr_reader :claims
+
+    def initialize(input)
+      @claims = parse_input(input)
+      @fabric = build_fabric(
+        Hash.new { |hash, key| hash[key] = 0 }
+      )
+    end
+
+    def inches_with_multiple_claims
+      @fabric.values.reduce(0) do |sum, i|
         i >= 2 ? sum + 1 : sum
       end
     end
-  end
-  
-  class SolutionPartTwo
-    def self.run(input)
-      matrix = Day3::build_matrix(input)
-      input.each do |claim, piece|
+
+    def claim_without_overlap
+      @claims.each do |claim, piece|
         overlaps = false
-        x_offset = 0 + piece[:x]
-        y_offset = 0 + piece[:y]
 
         for x in 1..piece[:w] do
           for y in 1..piece[:h] do
-            position = [x + x_offset, y + y_offset]
-            overlaps = true if matrix[position] >= 2
+            position = [x + piece[:x], y + piece[:y]]
+            overlaps = true if @fabric[position] >= 2
           end
         end
-        
+
         return claim unless overlaps
       end
     end
-  end
-  
-  def self.build_matrix(input)
-    matrix = {}
-    input.each do |_, piece|
-      x_offset = 0 + piece[:x]
-      y_offset = 0 + piece[:y]
 
-      for x in 1..piece[:w] do
-        for y in 1..piece[:h] do
-          position = [x + x_offset, y + y_offset]
-          matrix[position] ||= 0
-          matrix[position] += 1
+    protected
+
+    INPUT_REGEX = /\#([0-9]+)\s\@\s([0-9]+)\,([0-9]+)\:\s([0-9]+)x([0-9]+)/
+
+    def parse_input(input)
+      claims_hsh = {}
+      input.split("\n").each do |line|
+        id, x, y, w, h = line.strip.match(INPUT_REGEX).captures
+        claims_hsh[id.to_i] = { x: x.to_i, y: y.to_i, w: w.to_i, h: h.to_i }
+      end
+      claims_hsh
+    end
+
+    def build_fabric(matrix_hsh)
+      @claims.each do |_, piece|
+        for x in 1..piece[:w] do
+          for y in 1..piece[:h] do
+            position = [x + piece[:x], y + piece[:y]]
+            matrix_hsh[position] += 1
+          end
         end
       end
+      matrix_hsh
     end
-    matrix
   end
 end
