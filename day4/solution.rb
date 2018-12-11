@@ -187,15 +187,8 @@ module Day4
 
       @input.each do |line|
         minute, instruction, guard = parse_line(line)
-        if guard
-          current_guard = guard
-          next
-        end
-
-        if instruction == :sleeps
-          sleep_minute = minute
-          next
-        end
+        current_guard = guard if guard
+        sleep_minute = minute if instruction == :sleeps
 
         if instruction == :wakes_up
           range = (sleep_minute...minute)
