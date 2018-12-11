@@ -51,56 +51,53 @@ QUESTION
 
 module Day2
   class Solution
-    def self.run(input)
-      counters = { 2 => 0, 3 => 0 }
-
-      input.each do |box|
-        letters = box.split(//)
-        letters_hsh = generate_letters_count(letters)
-
-        counted_three = false
-        counted_two   = false
-
-        letters_hsh.each do |_, count|
-          if count == 3 and !counted_three
-            counters[3] += 1
-            counted_three = true
-          end
-
-          if count == 2 and !counted_two
-            counters[2] += 1
-            counted_two = true
-          end
-        end
-      end
-
-      counters.values.reduce(:*)
+    attr_reader :boxes
+    def initialize(input)
+      @boxes = parse_input(input)
     end
 
-    def self.generate_letters_count(letters)
-      letters.reduce({}) do |hsh, l|
-        hsh[l]||= 0
-        hsh[l]+= 1
+    def amount_of_letters_for(word)
+      word.split(//).reduce(Hash.new { |h, k| h[k] = 0 }) do |hsh, l|
+        hsh[l] += 1
         hsh
       end
     end
-  end
 
-  class SolutionPartTwo
-    def self.run(input)
-      pairs = {}
-      input_as_array = input.map { |b| b.split(//) }
+    def words_with_two_and_three_letters_occurrency
+      @boxes.reduce({ 2 => 0, 3 => 0 }) do |hsh, box|
+        letters = amount_of_letters_for(box).invert
+        hsh[2] += 1 if letters.has_key?(2)
+        hsh[3] += 1 if letters.has_key?(3)
+        hsh
+      end
+    end
+
+    def part_one
+      words_with_two_and_three_letters_occurrency.values.reduce(:*)
+    end
+
+    def difference_and_matched_letters(a, b)
+      matched = []
+      diff = 0
+      a.each_with_index do |v, i|
+        if v == b[i]; matched << v else diff += 1 end
+      end
+      [diff, matched.join]
+    end
+
+    def part_two
+      input_as_array = @boxes.map { |b| b.split(//) }
       current_diff = Float::INFINITY
       result = nil
 
       while box = input_as_array.shift
         input_as_array.each do |b|
           next if box == b
-          matched, diff = diff_with_order(box, b)
+          diff, matched = difference_and_matched_letters(box, b)
 
           if diff < current_diff
             current_diff = diff
-            result = matched.join
+            result = matched
           end
         end
       end
@@ -108,13 +105,10 @@ module Day2
       result
     end
 
-    def self.diff_with_order(a, b)
-      matched = []
-      diff = 0
-      a.each_with_index do |v, i|
-        if v == b[i]; matched << v else diff += 1 end
-      end
-      [matched, diff]
+    protected
+
+    def parse_input(input)
+      input.split("\n").map{ |l| l.strip }
     end
   end
 end
