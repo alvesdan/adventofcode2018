@@ -36,7 +36,7 @@ module Day3
     private
 
     def read_input
-      File.read("input")
+      File.read("#{__dir__}/input")
     end
   end
 end

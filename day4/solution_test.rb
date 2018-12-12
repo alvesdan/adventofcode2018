@@ -4,6 +4,7 @@ require_relative "./solution.rb"
 module Day4
   class SolutionTest < Minitest::Test
     def setup
+      @test_input = read_input
       @sample_input = <<-SAMPLE_INPUT
 [1518-11-01 00:00] Guard #10 begins shift
 [1518-11-01 00:25] wakes up
@@ -60,8 +61,7 @@ module Day4
     end
 
     def test_it_can_find_solution_for_input
-      input = File.read("input")
-      solution = Solution.new(input)
+      solution = Solution.new(@test_input)
       assert_equal solution.solution_part_one, 142515
     end
 
@@ -71,9 +71,14 @@ module Day4
     end
 
     def test_it_can_find_solution_part_two_for_input
-      input = File.read("input")
-      solution = Solution.new(input)
+      solution = Solution.new(@test_input)
       assert_equal solution.solution_part_two, 5370
+    end
+
+    private
+
+    def read_input
+      File.read("#{__dir__}/input")
     end
   end
 end

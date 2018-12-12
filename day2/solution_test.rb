@@ -1,5 +1,5 @@
 require "minitest/autorun"
-require "./solution.rb"
+require_relative "./solution.rb"
 
 module Day2
   class SolutionTest < Minitest::Test
@@ -78,7 +78,7 @@ wvxyz
     private
 
     def read_input
-      File.read("input")
+      File.read("#{__dir__}/input")
     end
   end
 end
