@@ -27,22 +27,26 @@ QUESTION
 
 module Day1
   class Solution
-    def self.run(input = [])
-      input.reduce(0) { |f, c| f += c }
+    def initialize(input)
+      @input = input
     end
-  end
 
-  class SolutionPartTwo
-    def self.run(input = [])
-      seen = {0 => 1}
+    def frequencies_sum
+      @input.split("\n").reduce(0) do |f, c|
+        f += c.strip.to_i
+      end
+    end
+
+    def first_common_frequency
+      seen = Hash.new { |hash, key| hash[key] = 0 }
       frequency = 0
+      mutable_input = @input.split("\n").map{ |i| i.to_i }
 
-      while c = input.shift
+      while c = mutable_input.shift
         frequency += c
-        seen[frequency] ||= 0
         seen[frequency] += 1
         return frequency if seen[frequency] > 1
-        input << c
+        mutable_input << c
       end
     end
   end
